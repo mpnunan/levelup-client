@@ -18,7 +18,7 @@ const EventForm = ({ user }) => {
   const router = useRouter();
 
   useEffect(() => {
-    getGames.then(setGames);
+    getGames().then(setGames);
   }, []);
 
   const handleChange = (e) => {

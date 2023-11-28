@@ -18,7 +18,7 @@ const GameForm = ({ user }) => {
   const router = useRouter();
 
   useEffect(() => {
-    getGameTypes.then(setGameTypes);
+    getGameTypes().then(setGameTypes);
   }, []);
 
   const handleChange = (e) => {
