@@ -5,11 +5,11 @@ import { Button, Form } from 'react-bootstrap';
 import { createGame, getGameTypes } from '../../utils/data/gameData';
 
 const initialState = {
-  skillLevel: 1,
-  numberOfPlayers: 0,
   title: '',
   maker: '',
-  gameTypeId: 0,
+  numberOfPlayers: 0,
+  skillLevel: 1,
+  gameType: 0,
 };
 
 const GameForm = ({ user }) => {
@@ -32,11 +32,11 @@ const GameForm = ({ user }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const game = {
-      maker: currentGame.maker,
       title: currentGame.title,
+      maker: currentGame.maker,
       numberOfPlayers: Number(currentGame.numberOfPlayers),
       skillLevel: Number(currentGame.skillLevel),
-      gameType: Number(currentGame.gameTypeId),
+      gameType: Number(currentGame.gameType),
       userId: user.uid,
     };
 
@@ -51,20 +51,18 @@ const GameForm = ({ user }) => {
           <Form.Control name="title" type="text" required value={currentGame.title} onChange={handleChange} />
         </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Select
-            aria-label="Select Game Type"
-            name="gameType"
-            required
-            value={currentGame.gameType}
-            onChange={handleChange}
-          >
-            <option>Type of Game:</option>
-            {gameTypes.map((gameType) => (
-              <option value={gameType.id}>{gameType.label}</option>
-            ))}
-          </Form.Select>
-        </Form.Group>
+        <Form.Select
+          aria-label="Select Game Type"
+          name="gameType"
+          required
+          value={currentGame.gameType}
+          onChange={handleChange}
+        >
+          <option value="">Type of Game:</option>
+          {gameTypes.map((gameType) => (
+            <option key={gameType.id} value={gameType.id}>{gameType.label}</option>
+          ))}
+        </Form.Select>
 
         <Form.Group className="mb-3">
           <Form.Label>Made by:</Form.Label>
@@ -73,12 +71,12 @@ const GameForm = ({ user }) => {
 
         <Form.Group className="mb-3">
           <Form.Label>Number of players:</Form.Label>
-          <Form.Control name="numberOfPlayers" required type="number" value={currentGame.numberOfPlayers} onChange={handleChange} />
+          <Form.Control name="numberOfPlayers" required type="text" value={currentGame.numberOfPlayers} onChange={handleChange} />
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Skill level (1-10):</Form.Label>
-          <Form.Control name="skillLevel" required type="number" value={currentGame.skillLevel} onChange={handleChange} />
+          <Form.Control name="skillLevel" required type="text" value={currentGame.skillLevel} onChange={handleChange} />
         </Form.Group>
 
         <Button variant="primary" type="submit">

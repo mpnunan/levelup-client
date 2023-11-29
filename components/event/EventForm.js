@@ -45,20 +45,18 @@ const EventForm = ({ user }) => {
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Select
-            aria-label="Select Game"
-            name="game"
-            required
-            value={currentEvent.game}
-            onChange={handleChange}
-          >
-            <option>What we are playing:</option>
-            {games.map((game) => (
-              <option value={game.id}>{game.title}</option>
-            ))}
-          </Form.Select>
-        </Form.Group>
+        <Form.Select
+          aria-label="Select Game"
+          name="game"
+          required
+          value={currentEvent.game}
+          onChange={handleChange}
+        >
+          <option value="">What we are playing:</option>
+          {games.map((game) => (
+            <option key={game.id} value={game.id}>{game.title}</option>
+          ))}
+        </Form.Select>
 
         <Form.Group className="mb-3">
           <Form.Label>Describe. In Detail.</Form.Label>
@@ -72,7 +70,7 @@ const EventForm = ({ user }) => {
 
         <Form.Group className="mb-3">
           <Form.Label>What Time:</Form.Label>
-          <Form.Control name="numberOfPlayers" required type="number" value={currentEvent.time} onChange={handleChange} />
+          <Form.Control name="time" required type="text" value={currentEvent.time} onChange={handleChange} />
         </Form.Group>
 
         <Button variant="primary" type="submit">
