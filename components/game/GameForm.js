@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { createGame, getGameTypes } from '../../utils/data/gameData';
+import { createGame, getGameTypes, updateGame } from '../../utils/data/gameData';
 
 const initialState = {
   title: '',
@@ -12,10 +12,30 @@ const initialState = {
   gameType: 0,
 };
 
-const GameForm = ({ user }) => {
+const GameForm = ({
+  user,
+  id,
+  title,
+  maker,
+  numberOfPlayers,
+  skillLevel,
+  gameType,
+}) => {
   const [gameTypes, setGameTypes] = useState([]);
   const [currentGame, setCurrentGame] = useState(initialState);
   const router = useRouter();
+
+  useEffect(() => {
+    if (id) {
+      setCurrentGame({
+        title,
+        maker,
+        numberOfPlayers,
+        skillLevel,
+        gameType,
+      });
+    }
+  }, [gameType, id, maker, numberOfPlayers, skillLevel, title]);
 
   useEffect(() => {
     getGameTypes().then(setGameTypes);
@@ -31,16 +51,20 @@ const GameForm = ({ user }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const game = {
-      title: currentGame.title,
-      maker: currentGame.maker,
-      numberOfPlayers: Number(currentGame.numberOfPlayers),
-      skillLevel: Number(currentGame.skillLevel),
-      gameType: Number(currentGame.gameType),
-      userId: user.uid,
-    };
+    if (id) {
+      updateGame(id, currentGame).then(() => router.push('/games'));
+    } else {
+      const game = {
+        title: currentGame.title,
+        maker: currentGame.maker,
+        numberOfPlayers: Number(currentGame.numberOfPlayers),
+        skillLevel: Number(currentGame.skillLevel),
+        gameType: Number(currentGame.gameType),
+        userId: user.uid,
+      };
 
-    createGame(game).then(() => router.push('/games'));
+      createGame(game).then(() => router.push('/games'));
+    }
   };
 
   return (
@@ -59,8 +83,8 @@ const GameForm = ({ user }) => {
           onChange={handleChange}
         >
           <option value="">Type of Game:</option>
-          {gameTypes.map((gameType) => (
-            <option key={gameType.id} value={gameType.id}>{gameType.label}</option>
+          {gameTypes.map((type) => (
+            <option key={type.id} value={type.id}>{type.label}</option>
           ))}
         </Form.Select>
 
@@ -91,6 +115,21 @@ GameForm.propTypes = {
   user: PropTypes.shape({
     uid: PropTypes.string.isRequired,
   }).isRequired,
+  id: PropTypes.number,
+  title: PropTypes.string,
+  maker: PropTypes.string,
+  numberOfPlayers: PropTypes.number,
+  skillLevel: PropTypes.number,
+  gameType: PropTypes.number,
+};
+
+GameForm.defaultProps = {
+  id: null,
+  title: '',
+  maker: '',
+  numberOfPlayers: 0,
+  skillLevel: 1,
+  gameType: 0,
 };
 
 export default GameForm;
