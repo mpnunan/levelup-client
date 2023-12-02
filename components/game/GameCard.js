@@ -1,37 +1,52 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
+import { deleteGame } from '../../utils/data/gameData';
 
-const GameCard = ({
+function GameCard({
   id,
-  title, //
+  title,
   maker,
   numberOfPlayers,
   skillLevel,
   userId,
   user,
-}) => (
-  <Card className="text-center">
-    <Card.Header>{title}</Card.Header>
-    <Card.Body>
-      <Card.Title>By: {maker}</Card.Title>
-      <Card.Text>{numberOfPlayers} players needed</Card.Text>
-    </Card.Body>
-    <Card.Footer className="text-muted">
-      <Card.Text>Skill Level: {skillLevel}</Card.Text>
-      <>
-        {userId === user.uid
-          ? (
-            <Link passHref href={`/games/${id}`}>
-              Update Game
-            </Link>
-          )
-          : null}
-      </>
-    </Card.Footer>
-  </Card>
-);
+  onUpdate,
+
+}) {
+  const deleteThisGame = () => {
+    if (window.confirm(`Delete ${title}?`)) {
+      deleteGame(id).then(() => onUpdate());
+    }
+  };
+  return (
+    <Card className="text-center">
+      <Card.Header>{title}</Card.Header>
+      <Card.Body>
+        <Card.Title>By: {maker}</Card.Title>
+        <Card.Text>{numberOfPlayers} players needed</Card.Text>
+      </Card.Body>
+      <Card.Footer className="text-muted">
+        <Card.Text>Skill Level: {skillLevel}</Card.Text>
+        <>
+          {userId === user.uid
+            ? (
+              <>
+                <Link passHref href={`/games/${id}`}>
+                  Update Game
+                </Link>
+                <Button variant="danger" onClick={deleteThisGame}>
+                  {`Delete ${title}?`}
+                </Button>
+              </>
+            )
+            : null}
+        </>
+      </Card.Footer>
+    </Card>
+  );
+}
 
 GameCard.propTypes = {
   id: PropTypes.number.isRequired,
@@ -46,6 +61,7 @@ GameCard.propTypes = {
   user: PropTypes.shape({
     uid: PropTypes.string.isRequired,
   }).isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };
 
 export default GameCard;

@@ -10,6 +10,10 @@ function Home() {
   const router = useRouter();
   const { user } = useAuth();
 
+  const gameCards = () => {
+    getGames().then(setGames);
+  };
+
   useEffect(() => {
     getGames().then(setGames);
   }, []);
@@ -26,7 +30,7 @@ function Home() {
       </Button>
       {games.map((game) => (
         <section key={`game--${game.id}`} className="game">
-          <GameCard id={game.id} title={game.title} maker={game.maker} numberOfPlayers={game.number_of_players} skillLevel={game.skill_level} userId={game.gamer.uid} user={user} />
+          <GameCard id={game.id} title={game.title} maker={game.maker} numberOfPlayers={game.number_of_players} skillLevel={game.skill_level} userId={game.gamer.uid} user={user} onUpdate={gameCards} />
         </section>
       ))}
     </article>
