@@ -4,7 +4,7 @@ import EventForm from '../../components/event/EventForm';
 import { useAuth } from '../../utils/context/authContext';
 import { getSingleEvent } from '../../utils/data/eventData';
 
-const UpdateGame = () => {
+const UpdateEvent = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { eventId } = router.query;
@@ -22,4 +22,4 @@ const UpdateGame = () => {
   );
 };
 
-export default UpdateGame;
+export default UpdateEvent;
