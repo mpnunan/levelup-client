@@ -1,9 +1,9 @@
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { getGames } from '../../utils/data/gameData';
-import { createEvent } from '../../utils/data/eventData';
+import { createEvent, updateEvent } from '../../utils/data/eventData';
 
 const initialState = {
   game: 0,
@@ -12,10 +12,29 @@ const initialState = {
   time: '',
 };
 
-const EventForm = ({ user }) => {
+const EventForm = ({
+  user,
+  id,
+  game,
+  description,
+  date,
+  time,
+}) => {
   const [games, setGames] = useState([]);
   const [currentEvent, setCurrentEvent] = useState(initialState);
   const router = useRouter();
+
+  useEffect(() => {
+    if (id) {
+      setCurrentEvent({
+        game,
+        description,
+        date,
+        time,
+        userId: user.uid,
+      });
+    }
+  }, [date, description, game, id, time, user]);
 
   useEffect(() => {
     getGames().then(setGames);
@@ -31,15 +50,19 @@ const EventForm = ({ user }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const event = {
-      game: Number(currentEvent.game),
-      description: currentEvent.description,
-      date: currentEvent.date,
-      time: currentEvent.time,
-      userId: user.uid,
-    };
+    if (id) {
+      updateEvent(id, currentEvent).then(router.push('/events'));
+    } else {
+      const event = {
+        game: Number(currentEvent.game),
+        description: currentEvent.description,
+        date: currentEvent.date,
+        time: currentEvent.time,
+        userId: user.uid,
+      };
 
-    createEvent(event).then(() => router.push('/events'));
+      createEvent(event).then(() => router.push('/events'));
+    }
   };
 
   return (
@@ -53,8 +76,8 @@ const EventForm = ({ user }) => {
           onChange={handleChange}
         >
           <option value="">What we are playing:</option>
-          {games.map((game) => (
-            <option key={game.id} value={game.id}>{game.title}</option>
+          {games.map((gameObj) => (
+            <option key={gameObj.id} value={gameObj.id}>{gameObj.title}</option>
           ))}
         </Form.Select>
 
@@ -85,6 +108,19 @@ EventForm.propTypes = {
   user: PropTypes.shape({
     uid: PropTypes.string.isRequired,
   }).isRequired,
+  id: PropTypes.number,
+  game: PropTypes.number,
+  description: PropTypes.string,
+  date: PropTypes.string,
+  time: PropTypes.string,
+};
+
+EventForm.defaultProps = {
+  id: null,
+  game: 0,
+  description: '',
+  date: '',
+  time: '',
 };
 
 export default EventForm;
