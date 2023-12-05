@@ -11,8 +11,8 @@ const UpdateEvent = () => {
   const [event, setEvent] = useState({});
 
   useEffect(() => {
-    getSingleEvent(eventId).then(setEvent);
-  }, [eventId]);
+    getSingleEvent(eventId, user.uid).then(setEvent);
+  }, [eventId, user]);
 
   return (
     <div>

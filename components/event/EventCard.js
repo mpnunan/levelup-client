@@ -2,7 +2,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { deleteEvent } from '../../utils/data/eventData';
+import { deleteEvent, joinEvent, leaveEvent } from '../../utils/data/eventData';
 
 function EventCard({
   user,
@@ -13,12 +13,19 @@ function EventCard({
   date,
   time,
   organizer,
+  joined,
   onUpdate,
 }) {
   const deleteThisEvent = () => {
     if (window.confirm(`Delete ${description}?`)) {
       deleteEvent(id).then(() => onUpdate());
     }
+  };
+  const joinThisEvent = () => {
+    joinEvent(id, user.uid).then(() => onUpdate());
+  };
+  const leaveThisEvent = () => {
+    leaveEvent(id, user.uid).then(() => onUpdate());
   };
   return (
     <Card className="text-center">
@@ -44,6 +51,20 @@ function EventCard({
             )
             : null}
         </>
+        <>
+          {!joined
+            ? (
+              <Button onClick={joinThisEvent}>
+                Join Event
+              </Button>
+            )
+            : (
+              <Button onClick={leaveThisEvent}>
+                Leave Event
+              </Button>
+            )}
+        </>
+
       </Card.Footer>
     </Card>
   );
@@ -64,6 +85,7 @@ EventCard.propTypes = {
     uid: PropTypes.string.isRequired,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
+  joined: PropTypes.bool.isRequired,
 };
 
 export default EventCard;

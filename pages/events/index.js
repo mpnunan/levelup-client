@@ -11,12 +11,12 @@ function EventsHome() {
   const { user } = useAuth();
 
   const eventCards = () => {
-    getEvents().then(setEvents);
+    getEvents(user.uid).then(setEvents);
   };
 
   useEffect(() => {
-    getEvents().then(setEvents);
-  }, []);
+    getEvents(user.uid).then(setEvents);
+  }, [user.uid]);
 
   return (
     <article className="events">
@@ -30,7 +30,7 @@ function EventsHome() {
       </Button>
       {events.map((event) => (
         <section key={`event--${event.id}`} className="event">
-          <EventCard user={user} id={event.id} userId={event.organizer.uid} game={event.game.title} description={event.description} date={event.date} time={event.time} organizer={event.organizer.bio} onUpdate={eventCards} />
+          <EventCard user={user} id={event.id} userId={event.organizer.uid} game={event.game.title} description={event.description} date={event.date} time={event.time} organizer={event.organizer.bio} joined={event.joined} onUpdate={eventCards} />
         </section>
       ))}
     </article>

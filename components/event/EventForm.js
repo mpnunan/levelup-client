@@ -37,8 +37,8 @@ const EventForm = ({
   }, [date, description, game, id, time, user]);
 
   useEffect(() => {
-    getGames().then(setGames);
-  }, []);
+    getGames(user.uid).then(setGames);
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
